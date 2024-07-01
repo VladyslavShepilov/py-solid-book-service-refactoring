@@ -1,10 +1,10 @@
 import json
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree
 from abc import ABC, abstractmethod
 
 
 class Document(ABC):
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         self.title = title
         self.content = content
 
@@ -40,18 +40,18 @@ class OperateBookMixin(OperateDocumentMixin):
         if serialize_type == "json":
             return json.dumps({"title": self.title, "content": self.content})
         elif serialize_type == "xml":
-            root = ET.Element("book")
-            title = ET.SubElement(root, "title")
+            root = ElementTree.Element("book")
+            title = ElementTree.SubElement(root, "title")
             title.text = self.title
-            content = ET.SubElement(root, "content")
+            content = ElementTree.SubElement(root, "content")
             content.text = self.content
-            return ET.tostring(root, encoding="unicode")
+            return ElementTree.tostring(root, encoding="unicode")
         else:
             raise ValueError(f"Unknown serialize type: {serialize_type}")
 
 
 class Book(Document, DisplayBookMixin, OperateBookMixin):
-    def __init__(self, title: str, content: str):
+    def __init__(self, title: str, content: str) -> None:
         super().__init__(title, content)
 
     def print_document(self, print_type: str) -> None:
