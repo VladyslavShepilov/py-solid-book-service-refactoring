@@ -8,14 +8,14 @@ class Document(ABC):
         self.title = title
         self.content = content
 
-    @abstractmethod
-    def print_document(self, print_type: str) -> None:
-        pass
-
 
 class DisplayDocumentMixin(ABC):
     @abstractmethod
     def display(self, display_type: str) -> None:
+        pass
+
+    @abstractmethod
+    def print_document(self, print_type: str) -> None:
         pass
 
 
@@ -33,6 +33,16 @@ class DisplayBookMixin(DisplayDocumentMixin):
             print(self.content[::-1])
         else:
             raise ValueError(f"Unknown display type: {display_type}")
+
+    def print_document(self, print_type: str) -> None:
+        if print_type == "console":
+            print(f"Printing the book: {self.title}...")
+            print(self.content)
+        elif print_type == "reverse":
+            print(f"Printing the book in reverse: {self.title}...")
+            print(self.content[::-1])
+        else:
+            raise ValueError(f"Unknown print type: {print_type}")
 
 
 class OperateBookMixin(OperateDocumentMixin):
@@ -53,16 +63,6 @@ class OperateBookMixin(OperateDocumentMixin):
 class Book(Document, DisplayBookMixin, OperateBookMixin):
     def __init__(self, title: str, content: str) -> None:
         super().__init__(title, content)
-
-    def print_document(self, print_type: str) -> None:
-        if print_type == "console":
-            print(f"Printing the book: {self.title}...")
-            print(self.content)
-        elif print_type == "reverse":
-            print(f"Printing the book in reverse: {self.title}...")
-            print(self.content[::-1])
-        else:
-            raise ValueError(f"Unknown print type: {print_type}")
 
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
